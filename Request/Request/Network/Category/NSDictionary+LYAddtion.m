@@ -12,7 +12,7 @@
 
 @implementation NSDictionary (LYAddtion)
 
-- (NSString *)toStrong {
+- (NSString *)toString {
     NSMutableString *string = [NSMutableString string];
     [string appendString:@"{"];
     NSArray *array = [[self allKeys] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
@@ -23,11 +23,11 @@
         [string appendFormat:@"%@=",key];
         id obj = self[key];
         if ([obj isKindOfClass:NSDictionary.class]) {
-            [string appendString:[obj toStrong]];
+            [string appendString:[obj toString]];
         }   if ([obj isKindOfClass:NSArray.class]) {
-            [string appendString:[obj toStrong]];
+            [string appendString:[obj toString]];
         } else if ([obj isKindOfClass:NSString.class]) {
-            [string appendString:[obj toStrong]];
+            [string appendString:[obj toString]];
         } else if ([obj isKindOfClass:NSNumber.class]) {
             [string appendFormat:@"%@",obj];
         }

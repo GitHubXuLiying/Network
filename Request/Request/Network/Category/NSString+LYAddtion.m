@@ -12,7 +12,7 @@
 
 @implementation NSString (LYAddtion)
 
-- (NSString *)toStrong {
+- (NSString *)toString {
     if (self && self.length) {
         if ([self isPureInt]) {
             return self;

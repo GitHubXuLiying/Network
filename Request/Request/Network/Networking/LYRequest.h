@@ -57,57 +57,57 @@
 
 @property(nonatomic,assign) NSInteger identifyTag;//自定义identifyTag
 
-- (LYRequest *)initWithUrl:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
+- (instancetype)initWithUrl:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
 - (void)initDefaultConfig;
 
-- (LYRequest *)initWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
+- (instancetype)initWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
-+ (LYRequest *)requestWithURL:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
++ (instancetype)requestWithURL:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
 
-+ (LYRequest *)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
++ (instancetype)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
 
 - (void)resume;
 
 
-+ (LYRequest *)getRequstWithURL:(NSString *)url
++ (instancetype)getRequstWithURL:(NSString *)url
                        params:(NSDictionary *)params
                  successBlock:(LYRequestSucBlock)successBlock
                  failureBlock:(LYRequestFailBlock)failureBlock;
 
-+ (LYRequest *)getRequstWithURL:(NSString *)url
++ (instancetype)getRequstWithURL:(NSString *)url
                        params:(NSDictionary *)params
                      delegate:(id<LYRequestDelegate>)delegate;
 
-+ (LYRequest *)getRequstWithURL:(NSString *)url
++ (instancetype)getRequstWithURL:(NSString *)url
                        params:(NSDictionary*)params
                        target:(id)target
                        action:(SEL)action;
 
 /********************************************************************************************************/
 
-+ (LYRequest *)postRequstWithURL:(NSString *)url
++ (instancetype)postRequstWithURL:(NSString *)url
                         params:(NSDictionary *)params
                   successBlock:(LYRequestSucBlock)successBlock
                   failureBlock:(LYRequestFailBlock)failureBlock;
 
-+ (LYRequest *)postRequstWithURL:(NSString *)url
++ (instancetype)postRequstWithURL:(NSString *)url
                         params:(NSDictionary*)params
                       delegate:(id<LYRequestDelegate>)delegate;
 
-+ (LYRequest *)postRequstWithURL:(NSString *)url
++ (instancetype)postRequstWithURL:(NSString *)url
                         params:(NSDictionary*)params
                         target:(id)target
                         action:(SEL)action;
 
 /********************************************************************************************************/
 
-+ (LYRequest *)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id<LYRequestDelegate>)delegate;
++ (instancetype)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id<LYRequestDelegate>)delegate;
 
-+ (LYRequest *)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name target:(id)target action:(SEL)action;
++ (instancetype)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name target:(id)target action:(SEL)action;
 
-+ (LYRequest *)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
++ (instancetype)requestWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
 @end

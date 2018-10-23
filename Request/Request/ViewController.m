@@ -23,6 +23,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
   
+
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -37,7 +39,6 @@
     }
     for (int i =0 ; i < 5; i ++) {
         [_request resume];
-
     }
 }
 

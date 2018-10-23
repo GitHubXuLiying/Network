@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (LYAddtion)
 
-- (NSString *)toStrong;
+- (NSString *)toString;
 - (NSInteger)indexOfCharacter:(char)character;
 - (NSString *)substring:(char)c len:(NSInteger)len;
 + (NSString *)stringWithString:(NSString *)str1 scale:(NSInteger)scale;

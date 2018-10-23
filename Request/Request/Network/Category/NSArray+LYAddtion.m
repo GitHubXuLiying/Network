@@ -12,16 +12,16 @@
 
 @implementation NSArray (LYAddtion)
 
-- (NSString *)toStrong {
+- (NSString *)toString {
     NSMutableString *string = [NSMutableString string];
     [string appendString:@"["];
     for (id obj in self) {
         if ([obj isKindOfClass:NSDictionary.class]) {
-            [string appendString:[obj toStrong]];
+            [string appendString:[obj toString]];
         }   if ([obj isKindOfClass:NSArray.class]) {
-            [string appendString:[obj toStrong]];
+            [string appendString:[obj toString]];
         } else if ([obj isKindOfClass:NSString.class]) {
-            [string appendString:[obj toStrong]];
+            [string appendString:[obj toString]];
         } else if ([obj isKindOfClass:NSNumber.class]) {
             [string appendFormat:@"%@",obj];
         }
