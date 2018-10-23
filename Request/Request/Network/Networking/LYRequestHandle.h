@@ -19,6 +19,8 @@
 @property (nonatomic, assign) BOOL networkError;//未设置
 
 @property (nonatomic, copy) AFNetworkReachabilityBlock networkStatusBlock;
+@property (nonatomic, strong) AFHTTPSessionManager *manager;
+
 
 + (LYRequestHandle *)sharedInstance;
 

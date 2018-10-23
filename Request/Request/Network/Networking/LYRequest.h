@@ -14,7 +14,6 @@
 
 @interface LYRequest : NSObject
 
-@property (nonatomic, strong) AFHTTPSessionManager *manager;
 @property (nonatomic, assign) LYRequestMethod requestMethod;
 @property (nonatomic, assign) LYRequestType requestType;
 @property (nonatomic, strong) NSURLSessionDataTask *task;

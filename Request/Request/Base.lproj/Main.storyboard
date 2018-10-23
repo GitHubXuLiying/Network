@@ -20,7 +20,29 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wcw-3E-t6S">
+                                <rect key="frame" x="309" y="120" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="groupRequest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MrE-o4-2jz"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KrW-eY-qRw">
+                                <rect key="frame" x="20" y="120" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="request:" destination="BYZ-38-t0r" eventType="touchUpInside" id="p9Q-Jq-xr7"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Wcw-3E-t6S" firstAttribute="top" secondItem="wQG-PH-n6u" secondAttribute="bottom" constant="100" id="Hbk-O2-HmJ"/>
+                            <constraint firstAttribute="trailing" secondItem="Wcw-3E-t6S" secondAttribute="trailing" constant="20" id="QS0-Cj-fDZ"/>
+                            <constraint firstItem="KrW-eY-qRw" firstAttribute="top" secondItem="wQG-PH-n6u" secondAttribute="bottom" constant="100" id="cLX-te-M0L"/>
+                            <constraint firstItem="KrW-eY-qRw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="jME-GM-17x"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

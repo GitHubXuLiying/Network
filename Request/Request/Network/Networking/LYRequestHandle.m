@@ -34,6 +34,7 @@
     if (self) {
         self.lock = [[NSRecursiveLock alloc] init];
         self.networkError = YES;
+        self.manager = [AFHTTPSessionManager manager];
         [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
     }
     return self;

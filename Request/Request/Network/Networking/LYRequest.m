@@ -52,23 +52,23 @@
 }
 
 - (void)initDefaultConfig {
-    self.manager = [AFHTTPSessionManager manager];
-    self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
+    [LYRequestHandle sharedInstance].manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [LYRequestHandle sharedInstance].manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
     
     self.timeoutInterval = 60;
-    self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
+    [LYRequestHandle sharedInstance].manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     self.callBackIfCanceled = YES;
     self.requestType = LYRequestTypeJSON;
 }
 
 - (void)resetDefaultConfig {
-    self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
+    [LYRequestHandle sharedInstance].manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     if (self.requestType == LYRequestTypeJSON) {
-        self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        [LYRequestHandle sharedInstance].manager.requestSerializer = [AFJSONRequestSerializer serializer];
     } else {
-        self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        [LYRequestHandle sharedInstance].manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     }
+    self.finished = NO;
 }
 
 - (id)jsonParseWithData:(id)data {
@@ -127,11 +127,9 @@
     if (self.params) {
         [params setValuesForKeysWithDictionary:self.params];
     }
-//此处不会造成循环引用 无需使用weakSelf
-//    __weak typeof(self)weakSelf = self;
     
-    AFHTTPSessionManager *manager = self.manager;
     
+    AFHTTPSessionManager *manager = [LYRequestHandle sharedInstance].manager;
     if (self.image) { //上传图片
         [self resumeUPLoadImage];
         return;
@@ -163,8 +161,11 @@
     if (self.startBlock) {
         self.startBlock(self);
     }
+    NSLog(@"________   %ld",self.task.taskIdentifier);
+
     [[LYRequestHandle sharedInstance] addReuest:self];
     LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
+    
     if (re) {
         NSLog(@"已存在相同的网络请求");
         self.task = re.task;
@@ -178,7 +179,7 @@
     if (self.startBlock) {
         self.startBlock(self);
     }
-    AFHTTPSessionManager *manager = self.manager;
+    AFHTTPSessionManager *manager = [LYRequestHandle sharedInstance].manager;
     manager.requestSerializer.timeoutInterval = 5 * 60;
     self.task  =  [manager POST:self.url parameters:self.params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSData *imageData = UIImageJPEGRepresentation(self.image, 0.4);
@@ -210,7 +211,6 @@
 
 
 - (BOOL)isRunning {
-    NSLog(@"xly--%@______",self.task);
     return self.task && self.task.state == NSURLSessionTaskStateRunning;
 }
 
@@ -243,12 +243,6 @@
 - (void)parse {
     
     NSArray *requests = [[LYRequestHandle sharedInstance] requestsWithTaskIdentifier:self.task.taskIdentifier].copy;
-
-    if (self.error.code == NSURLErrorCancelled) {
-        if (self.callBackIfCanceled == NO) {
-            return;
-        }
-    }
     
     for (NSInteger index = 0;index < requests.count;index ++) {
         LYRequest *req = requests[index];
@@ -257,20 +251,22 @@
             req.responseObject = self.responseObject;
         }
         if (req.error) {
-            if (req.endBlock) {
-                req.endBlock(req);
-            }
-            
-            if (req.failureBlock) {
-                req.failureBlock(req);
-            }
-            
-            if (req.delegate && [req.delegate respondsToSelector:@selector(requestdidFailWithError:)]) {
-                [req.delegate requestdidFailWithError:req];
-            }
-            
-            if (req.target && [req.target respondsToSelector:req.action]) {
-                [req.target performSelector:req.action withObject:req afterDelay:0.0];
+            if (!(req.error.code == NSURLErrorCancelled && self.callBackIfCanceled == NO)) {
+                if (req.endBlock) {
+                    req.endBlock(req);
+                }
+                
+                if (req.failureBlock) {
+                    req.failureBlock(req);
+                }
+                
+                if (req.delegate && [req.delegate respondsToSelector:@selector(requestdidFailWithError:)]) {
+                    [req.delegate requestdidFailWithError:req];
+                }
+                
+                if (req.target && [req.target respondsToSelector:req.action]) {
+                    [req.target performSelector:req.action withObject:req afterDelay:0.0];
+                }
             }
         } else {
             if (req.endBlock) {
@@ -286,7 +282,9 @@
                 [req.target performSelector:req.action withObject:req afterDelay:0.0];
             }
         }
+        req.finished = YES;
     }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:KLYRequestDidFinish object:self];
     [[LYRequestHandle sharedInstance] deleteRequestsWithTaskIdentifier:self.task.taskIdentifier];
 }

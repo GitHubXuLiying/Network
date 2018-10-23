@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSArray *requests;
 @property (nonatomic, copy) LYGroupRequestCompletedBlock completedBlock;
 @property (nonatomic, strong) id obv;
+@property (nonatomic, assign) BOOL first;
 
 @end
 
@@ -28,14 +29,14 @@
         if (self.completedBlock) {
             self.completedBlock(self.requests);
         }
+        [[NSNotificationCenter defaultCenter] removeObserver:self.obv];
+        self.obv = nil;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self.obv];
-    self.obv = nil;
 }
 
 - (BOOL)allCompleted {
     for (LYRequest *req in self.requests) {
-        if (req.isCompleted == NO) {
+        if (req.finished == NO) {
             return NO;
         }
     }
@@ -44,18 +45,24 @@
 
 - (instancetype)initWithRequests:(NSArray *)requests completed:(nonnull LYGroupRequestCompletedBlock)block {
     if (self = [super init]) {
-      self.obv =  [[NSNotificationCenter defaultCenter] addObserverForName:KLYRequestDidFinish object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
-            [self lyRequestDidFinish:note];
-        }];
         self.requests = requests;
         self.completedBlock = block;
+        _first = YES;
     }
     return self;
 }
 
 - (void)resume {
-    for (LYRequest *request in self.requests) {
-        [request resume];
+    if (self.requests && self.requests.count && ([self allCompleted] || _first)) {
+        _first = NO;
+        self.obv =  [[NSNotificationCenter defaultCenter] addObserverForName:KLYRequestDidFinish object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+            [self lyRequestDidFinish:note];
+        }];
+        for (LYRequest *request in self.requests) {
+            [request resume];
+        }
+    } else {
+        NSLog(@"xly--%@",@"正在请求");
     }
 }
 
