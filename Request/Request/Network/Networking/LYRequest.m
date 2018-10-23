@@ -10,6 +10,7 @@
 #import "AFNetworking.h"
 #import "LYRequestHandle.h"
 #import "RequestUrls.h"
+#import "NSString+LYAddtion.h"
 
 @interface LYRequest()
 
@@ -135,6 +136,21 @@
         return;
     }
 
+    self.md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@",url,params] md5String];
+    if (self.startBlock) {
+        self.startBlock(self);
+    }
+    NSLog(@"________   %@",self.md5Identifier);
+    
+    [[LYRequestHandle sharedInstance] addReuest:self];
+    LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
+
+    if (re) {
+        NSLog(@"已存在相同的网络请求");
+        self.task = re.task;
+        return;
+    }
+    
     NSString *method = @"GET";
     if (self.requestMethod == POST) {
         method = @"POST";
@@ -158,19 +174,7 @@
             }
         }
     }];
-    if (self.startBlock) {
-        self.startBlock(self);
-    }
-    NSLog(@"________   %ld",self.task.taskIdentifier);
-
-    [[LYRequestHandle sharedInstance] addReuest:self];
-    LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
     
-    if (re) {
-        NSLog(@"已存在相同的网络请求");
-        self.task = re.task;
-        return;
-    }
 
     [self.task resume];
 }
@@ -209,7 +213,6 @@
     }];
 }
 
-
 - (BOOL)isRunning {
     return self.task && self.task.state == NSURLSessionTaskStateRunning;
 }
@@ -242,7 +245,7 @@
 
 - (void)parse {
     
-    NSArray *requests = [[LYRequestHandle sharedInstance] requestsWithTaskIdentifier:self.task.taskIdentifier].copy;
+    NSArray *requests = [[LYRequestHandle sharedInstance] requestsWithMD5Identifier:self.md5Identifier].copy;
     
     for (NSInteger index = 0;index < requests.count;index ++) {
         LYRequest *req = requests[index];
@@ -286,7 +289,7 @@
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:KLYRequestDidFinish object:self];
-    [[LYRequestHandle sharedInstance] deleteRequestsWithTaskIdentifier:self.task.taskIdentifier];
+    [[LYRequestHandle sharedInstance] deleteRequestsWithMD5Identifier:self.md5Identifier];
 }
 
 - (void)removewRequest:(LYRequest *)request {

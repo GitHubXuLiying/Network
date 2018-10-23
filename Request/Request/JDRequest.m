@@ -15,6 +15,7 @@
     
     self.baseURL = @"https://www.apiopen.top/";
     self.defaultParams = @{
+                        
                            };
     self.requestType = LYRequestTypeJSON;
 }

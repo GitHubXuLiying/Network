@@ -68,7 +68,7 @@
     [self.lock lock];
     for (NSArray *arr in self.requestItems.allValues) {
         for (LYRequest *re in arr) {
-            if (re.task.taskIdentifier == request.task.taskIdentifier && re.isRunning) {
+            if (re.md5Identifier == request.md5Identifier && re.isRunning) {
                 ret = re;
                 break;
             }
@@ -78,14 +78,13 @@
     return ret;
 }
 
-- (NSArray *)requestsWithTaskIdentifier:(NSInteger)taskIdentifier {
-    NSString *taskID = [NSString stringWithFormat:@"%ld",taskIdentifier];
-    return self.requestItems[taskID];
+- (NSArray *)requestsWithMD5Identifier:(NSString *)MD5Identifier {
+    return self.requestItems[MD5Identifier];
 }
 
 - (void)addReuest:(LYRequest *)request {
     [self.lock lock];
-    [self addRequest:request taskIdentifier:request.task.taskIdentifier];
+    [self addRequest:request MD5Identifier:request.md5Identifier];
     [self.lock unlock];
 }
 
@@ -97,10 +96,10 @@
 }
 
 
-- (void)addRequest:(LYRequest *)request taskIdentifier:(NSInteger)taskIdentifier {
+- (void)addRequest:(LYRequest *)request MD5Identifier:(NSString *)MD5Identifier {
     if (request) {
         [self.lock lock];
-        NSString *taskID = [NSString stringWithFormat:@"%ld",taskIdentifier];
+        NSString *taskID = MD5Identifier;
         NSMutableArray *requests = self.requestItems[taskID];
         if (requests == nil) {
             requests = [NSMutableArray array];
@@ -114,7 +113,7 @@
 - (void)deleteRequest:(LYRequest *)request {
     if (request) {
         [self.lock lock];
-        NSString *taskID = [NSString stringWithFormat:@"%ld",request.task.taskIdentifier];
+        NSString *taskID = request.md5Identifier;
         NSMutableArray *requests = self.requestItems[taskID];
         if (requests && [requests containsObject:request]) {
             [requests removeObject:request];
@@ -124,8 +123,8 @@
     }
 }
 
-- (void)deleteRequestsWithTaskIdentifier:(NSInteger)taskIdentifier {
-    NSString *taskID = [NSString stringWithFormat:@"%ld",taskIdentifier];
+- (void)deleteRequestsWithMD5Identifier:(NSString *)MD5Identifier {
+    NSString *taskID = MD5Identifier;
     [self.lock lock];
     NSMutableArray *requests = self.requestItems[taskID];
     if (requests) {
@@ -135,8 +134,8 @@
     [self.lock unlock];
 }
 
-- (void)cancelRequestWithTaskIdentifier:(NSInteger)taskIdentifier {
-    NSString *taskID = [NSString stringWithFormat:@"%ld",taskIdentifier];
+- (void)cancelRequestWithMD5Identifier:(NSString *)MD5Identifier {
+    NSString *taskID = MD5Identifier;
     [self.lock lock];
     NSMutableArray *requests = self.requestItems[taskID];
     if (requests && requests.count) {

@@ -23,6 +23,7 @@
 @property (nonatomic, copy)   NSString *url;
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, copy)   NSDictionary *defaultParams;
+@property (nonatomic, copy)   NSString *md5Identifier;
 
 @property (nonatomic, weak) id<LYRequestDelegate> delegate;
 @property (nonatomic, weak) id<RequestDeallocDelegate> deallocDelegate;
@@ -55,8 +56,6 @@
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
 @property(nonatomic,assign) NSInteger identifyTag;//自定义identifyTag
-@property (nonatomic, copy,readonly) NSString *taskIdentifier;
-
 
 - (LYRequest *)initWithUrl:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 

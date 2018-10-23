@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "JDRequest.h"
 #import "LYGroupRequest.h"
+#import "NSDictionary+LYAddtion.h"
 
 @interface ViewController ()
 
@@ -21,21 +22,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-   
-
+  
     // Do any additional setup after loading the view, typically from a nib.
 }
+
 - (IBAction)request:(id)sender {
     if (_request == nil) {
         _request = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
             NSLog(@"xly--%@",request.responseObject);
+            NSLog(@"xly--%@",@"1111111222222");
         } failureBlock:^(LYRequest *request) {
             NSLog(@"xly--%@",request.error);
         }];
     }
+    for (int i =0 ; i < 5; i ++) {
+        [_request resume];
 
-    [_request resume];
+    }
 }
 
 - (IBAction)groupRequest:(id)sender {

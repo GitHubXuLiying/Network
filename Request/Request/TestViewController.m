@@ -32,45 +32,6 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     
-    
-   JDRequest *request = [JDRequest postRequstWithURL:@"v18" params:@{
-@"fun": @{
-           @"productList": @{}
-       }} successBlock:^(LYRequest *request) {
-        NSLog(@"xly--%@",@"suc");
-    } failureBlock:^(LYRequest *request) {
-        NSLog(@"xly--%@",@"fail");
-    }];
-    [request resume];
-    
-//    __weak typeof(self) weakSelf = self;
-//    static NSInteger count = 0;
-//
-//    NSMutableArray *arr = [NSMutableArray array];
-//    for (NSInteger i = 0; i < 5; i ++) {
-//        LYRequest *request = [LYRequest postRequstWithURL:@"https://www.kuaikuaidai.com/app/index.do" params:nil successBlock:^(LYRequest *request) {
-//            NSLog(@"xly--%@",@"suc");
-//            NSLog(@"________xly--%ld",i);
-//            weakSelf.view.backgroundColor = [UIColor blueColor];
-//        } failureBlock:^(LYRequest *request) {
-//            NSLog(@"xly--%@",@"fail");
-//        }];
-//        [arr addObject:request];
-//    }
-//
-//   LYGroupRequest *req = [[LYGroupRequest alloc] initWithRequests:arr completed:^(NSArray *requests) {
-//
-//    }];
-//    [req resume];
-//
-//
-//    if (count >= 6) {
-//
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//
-//    }
-//    count ++;
-    
 }
 
 /*
