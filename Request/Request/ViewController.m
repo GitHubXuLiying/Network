@@ -47,7 +47,8 @@
     } failureBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.error);
     }];
-
+    request.cache = YES;
+    request.useCache = YES;
     
     LYRequest *request1  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);
@@ -66,8 +67,8 @@
 //    request2.ignoreExistRequest = YES;
 
     [request resume];
-    [request1 resume];
-    [request2 resume];
+//    [request1 resume];
+//    [request2 resume];
 }
 
 - (IBAction)groupRequest:(id)sender {
@@ -83,6 +84,11 @@
         } failureBlock:^(LYRequest *request) {
             NSLog(@"xly--%@",request.error);
         }]];//id=27610708&page=1
+        [requests addObject:[JDRequest postRequstWithURL:@"satinCommentApi" params:@{@"id" : @"27610708",@"page" : @"1"} successBlock:^(LYRequest *request) {
+            NSLog(@"xly--%@",request.responseObject);
+        } failureBlock:^(LYRequest *request) {
+            NSLog(@"xly--%@",request.error);
+        }]];
         [requests addObject:[JDRequest postRequstWithURL:@"satinCommentApi" params:@{@"id" : @"27610708",@"page" : @"1"} successBlock:^(LYRequest *request) {
             NSLog(@"xly--%@",request.responseObject);
         } failureBlock:^(LYRequest *request) {

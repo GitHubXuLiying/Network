@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)formaterStringWithStringOrNumber:(id)stringOrNumber;
 + (NSString *)formaterStringWithStringOrNumber:(id)stringOrNumber scale:(NSInteger)scale;
+
 extern NSString *formaterString(id stringOrNumber,NSInteger scale);
 extern NSString *scaleString(NSString *str,NSInteger scale);
 

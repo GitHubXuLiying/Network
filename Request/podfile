@@ -3,5 +3,6 @@ platform :ios, '7.0'
 target 'Request' do
 
 pod 'AFNetworking', '~> 3.2.1'
+pod 'PINCache'
 
 end

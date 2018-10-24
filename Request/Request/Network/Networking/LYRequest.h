@@ -21,7 +21,8 @@
 
 @property (nonatomic, copy)   NSString *baseURL;
 @property (nonatomic, copy)   NSString *url;
-@property (nonatomic, strong) NSDictionary *params;
+@property (nonatomic, copy) NSDictionary *params;
+@property (nonatomic, copy) NSDictionary *newparams;
 @property (nonatomic, copy)   NSDictionary *defaultParams;
 @property (nonatomic, copy)   NSString *md5Identifier;
 
@@ -48,6 +49,7 @@
 @property (nonatomic,assign,readonly) BOOL isCompleted;
 
 @property (nonatomic, assign) BOOL finished;
+
 /**
  * 请求被取消是否回调  默认为YES
  */
@@ -63,6 +65,9 @@
  * 重复发起的请求 是否回调  默认为YES
  */
 @property (nonatomic, assign) BOOL callBackIfIsRepeatRequest;
+
+@property (nonatomic, assign) BOOL cache;
+@property (nonatomic, assign) BOOL useCache;
 
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
@@ -82,6 +87,7 @@
 
 - (void)resume;
 
+- (void)resumeWithNewParams:(NSDictionary *)params;
 
 + (instancetype)getRequstWithURL:(NSString *)url
                        params:(NSDictionary *)params

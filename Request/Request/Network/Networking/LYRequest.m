@@ -11,7 +11,7 @@
 #import "LYRequestHandle.h"
 #import "RequestUrls.h"
 #import "NSString+LYAddtion.h"
-
+#import "LYRequestCacheManager.h"
 #import "NSDictionary+LYAddtion.h"
 
 @interface LYRequest()
@@ -20,6 +20,7 @@
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) AFHTTPSessionManager *manager;
+@property (nonatomic, assign) BOOL isUPloadImage;
 
 @end
 
@@ -37,7 +38,7 @@
     
     if (self = [super init]) {
         [self initDefaultConfig];
-        
+        self.isUPloadImage = NO;
         self.url = url;
         self.requestMethod = method;
         
@@ -48,9 +49,6 @@
         self.successBlock = successBlock;
         self.failureBlock = failureBlock;
         self.deallocDelegate = [LYRequestHandle sharedInstance];
-        
-        NSLog(@"请求url____%@",self.url);
-        NSLog(@"请求参数____%@",self.params);
     }
     return self;
 }
@@ -69,6 +67,7 @@
 }
 
 - (void)resetDefaultConfig {
+    [LYRequestCacheManager sharedInstance];
     self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     if (self.requestType == LYRequestTypeJSON) {
         self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -88,6 +87,7 @@
         if (!image) {
             return nil;
         }
+        self.isUPloadImage = YES;
         self.url = [self getUrlWithUrl:url];
         self.fileName = fileName;
         self.name = name;
@@ -120,6 +120,15 @@
 }
 
 - (void)resume {
+    [self resumeWithParams:nil];
+}
+
+- (void)resumeWithNewParams:(NSDictionary *)params {
+    self.newparams = params;
+    [self resumeWithParams:params];
+}
+
+- (void)resumeWithParams:(NSDictionary *)paramss {
     
     [self resetDefaultConfig];
     
@@ -134,10 +143,14 @@
     if (self.params) {
         [params setValuesForKeysWithDictionary:self.params];
     }
+    if (paramss) {
+        [params setValuesForKeysWithDictionary:self.newparams];
+    }
     
-    
+    NSLog(@"请求url____%@",url);
+    NSLog(@"请求参数____%@",params);
     AFHTTPSessionManager *manager = self.manager;
-    if (self.image) { //上传图片
+    if (self.isUPloadImage) { //上传图片
         [self resumeUPLoadImage];
         return;
     }
@@ -146,6 +159,14 @@
         self.startBlock(self);
     }
     NSLog(@"________   %@",self.md5Identifier);
+    
+    if (self.useCache) {
+        id responseObject = [[LYRequestCacheManager sharedInstance] cacheRequestWithRequest:self];
+        if (responseObject) {
+            self.responseObject = responseObject;
+            [self parseCacheRequest:self];
+        }
+    }
     
     LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
     if (re) {
@@ -263,45 +284,65 @@
                 req.error = self.error;
                 req.responseObject = self.responseObject;
             }
-            if (req.error) {
-                if (!(req.error.code == NSURLErrorCancelled && self.callBackIfCanceled == NO)) {
-                    if (req.endBlock) {
-                        req.endBlock(req);
-                    }
-                    
-                    if (req.failureBlock) {
-                        req.failureBlock(req);
-                    }
-                    
-                    if (req.delegate && [req.delegate respondsToSelector:@selector(requestdidFailWithError:)]) {
-                        [req.delegate requestdidFailWithError:req];
-                    }
-                    
-                    if (req.target && [req.target respondsToSelector:req.action]) {
-                        [req.target performSelector:req.action withObject:req afterDelay:0.0];
-                    }
-                }
-            } else {
-                if (req.endBlock) {
-                    req.endBlock(req);
-                }
-                if (req.successBlock) {
-                    req.successBlock(req);
-                }
-                if (req.delegate && [req.delegate respondsToSelector:@selector(requestDidFinishLoading:)]) {
-                    [req.delegate requestDidFinishLoading:req];
-                }
-                if (req.target && [req.target respondsToSelector:req.action]) {
-                    [req.target performSelector:req.action withObject:req afterDelay:0.0];
-                }
-            }
+            [self parseRequest:req];
             req.finished = YES;
-            [[NSNotificationCenter defaultCenter] postNotificationName:KLYRequestDidFinish object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:KLYRequestDidFinish object:req];
             [[LYRequestHandle sharedInstance] deleteRequest:req];
         }
         
     }
     [[LYRequestHandle sharedInstance].lock unlock];
+}
+
+
+- (void)parseRequest:(LYRequest *)req {
+    if (!req) {
+        return;
+    }
+    if (req.error) {
+        if (!(req.error.code == NSURLErrorCancelled && self.callBackIfCanceled == NO)) {
+            if (req.endBlock) {
+                req.endBlock(req);
+            }
+            
+            if (req.failureBlock) {
+                req.failureBlock(req);
+            }
+            
+            if (req.delegate && [req.delegate respondsToSelector:@selector(requestdidFailWithError:)]) {
+                [req.delegate requestdidFailWithError:req];
+            }
+            
+            if (req.target && [req.target respondsToSelector:req.action]) {
+                [req.target performSelector:req.action withObject:req afterDelay:0.0];
+            }
+        }
+    } else {
+        if (req.endBlock) {
+            req.endBlock(req);
+        }
+        if (req.successBlock) {
+            req.successBlock(req);
+        }
+        if (req.delegate && [req.delegate respondsToSelector:@selector(requestDidFinishLoading:)]) {
+            [req.delegate requestDidFinishLoading:req];
+        }
+        if (req.target && [req.target respondsToSelector:req.action]) {
+            [req.target performSelector:req.action withObject:req afterDelay:0.0];
+        }
+    }
+}
+
+- (void)parseCacheRequest:(LYRequest *)req {
+    if (self.successBlock) {
+        self.successBlock(req);
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(requestDidFinishLoading:)]) {
+        [self.delegate requestDidFinishLoading:req];
+    }
+    if (self.target && [self.target respondsToSelector:self.action]) {
+        [self.target performSelector:self.action withObject:req afterDelay:0.0];
+    }
 }
 
 - (void)removewRequest:(LYRequest *)request {
@@ -367,5 +408,22 @@
     return request;
 }
 
+- (NSString *)md5Identifier {
+    if (_md5Identifier == nil) {
+        NSMutableDictionary *params1 = [NSMutableDictionary dictionary];
+        if (self.defaultParams) {
+            [params1 setValuesForKeysWithDictionary:self.defaultParams];
+        }
+        if (self.params) {
+            [params1 setValuesForKeysWithDictionary:self.params];
+        }
+        if (self.newparams) {
+            [params1 setValuesForKeysWithDictionary:self.newparams];
+        }
+        NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@",self.url,[params1 toString]] md5String];
+        _md5Identifier = md5Identifier;
+    }
+    return _md5Identifier;
+}
 
 @end
