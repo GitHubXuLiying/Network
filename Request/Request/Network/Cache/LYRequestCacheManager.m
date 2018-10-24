@@ -52,7 +52,6 @@
     if (request && request.responseObject) {
         [self.cache setObject:request.responseObject forKey:request.md5Identifier];
     }
-    
 }
 
 - (id)cacheRequestWithRequest:(LYRequest *)request {

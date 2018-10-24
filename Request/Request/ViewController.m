@@ -22,26 +22,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-  
 
-    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
 - (IBAction)request:(id)sender {
-//    if (_request == nil) {
-//        _request = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
-//            NSLog(@"xly--%@",request.responseObject);
-//            NSLog(@"xly--%@",@"1111111222222");
-//        } failureBlock:^(LYRequest *request) {
-//            NSLog(@"xly--%@",request.error);
-//        }];
-//    }
-//    for (int i =0 ; i < 5; i ++) {
-//        [_request resume];
-//    }
-    
-    LYRequest *request  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+
+    JDRequest *request  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);
         NSLog(@"xly--%@",@"1111111222222");
     } failureBlock:^(LYRequest *request) {
@@ -51,7 +38,7 @@
     request.useCache = YES;
     request.httpHeaders = @{@"a":@"test"};
     
-    LYRequest *request1  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+    JDRequest *request1  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);
         NSLog(@"xly--%@",@"1111111222222");
     } failureBlock:^(LYRequest *request) {
@@ -59,7 +46,7 @@
     }];
     request1.ignoreExistRequest = YES;
     
-    LYRequest *request2  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+    JDRequest *request2  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);
         NSLog(@"xly--%@",@"1111111222222");
     } failureBlock:^(LYRequest *request) {
@@ -68,8 +55,8 @@
 //    request2.ignoreExistRequest = YES;
 
     [request resume];
-//    [request1 resume];
-//    [request2 resume];
+    [request1 resume];
+    [request2 resume];
 }
 
 - (IBAction)groupRequest:(id)sender {

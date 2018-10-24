@@ -23,7 +23,6 @@
 		5F189C9E2178A82400134EF3 /* RequestUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F189C9D2178A82400134EF3 /* RequestUITests.m */; };
 		5F189CBA2178A84900134EF3 /* LYRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F189CB12178A84900134EF3 /* LYRequest.m */; };
 		5F189CBB2178A84900134EF3 /* LYRequestHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F189CB42178A84900134EF3 /* LYRequestHandle.m */; };
-		5F189CBE2179EDDD00134EF3 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F189CBD2179EDDD00134EF3 /* TestViewController.m */; };
 		D28BD856DDDB1A56AFB8ED72 /* libPods-Request.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27CCDF3B7ED485C6CD1D5113 /* libPods-Request.a */; };
 /* End PBXBuildFile section */
 
@@ -80,8 +79,6 @@
 		5F189CB12178A84900134EF3 /* LYRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRequest.m; sourceTree = "<group>"; };
 		5F189CB42178A84900134EF3 /* LYRequestHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRequestHandle.m; sourceTree = "<group>"; };
 		5F189CB62178A84900134EF3 /* LYRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRequest.h; sourceTree = "<group>"; };
-		5F189CBC2179EDDD00134EF3 /* TestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
-		5F189CBD2179EDDD00134EF3 /* TestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		5F189CC5217D8D7300134EF3 /* LYRequestDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYRequestDelegate.h; sourceTree = "<group>"; };
 		5F189CC6217D8D7300134EF3 /* LYRequestDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYRequestDefine.h; sourceTree = "<group>"; };
 		90C5579AC9B610DB3CCE40F2 /* Pods-Request.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Request.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Request/Pods-Request.debug.xcconfig"; sourceTree = "<group>"; };
@@ -173,8 +170,6 @@
 				5F189C7A2178A82200134EF3 /* AppDelegate.m */,
 				5F189C7C2178A82200134EF3 /* ViewController.h */,
 				5F189C7D2178A82200134EF3 /* ViewController.m */,
-				5F189CBC2179EDDD00134EF3 /* TestViewController.h */,
-				5F189CBD2179EDDD00134EF3 /* TestViewController.m */,
 				5F172789217F0DB8009C15D5 /* JDRequest.h */,
 				5F17278A217F0DB8009C15D5 /* JDRequest.m */,
 				5F189CAB2178A84900134EF3 /* Network */,
@@ -397,7 +392,6 @@
 				5F1727A6218050BA009C15D5 /* LYRequestCacheManager.m in Sources */,
 				5F17279E217F4BCC009C15D5 /* NSArray+LYAddtion.m in Sources */,
 				5F172769217DDA66009C15D5 /* LYGroupRequest.m in Sources */,
-				5F189CBE2179EDDD00134EF3 /* TestViewController.m in Sources */,
 				5F189C7B2178A82200134EF3 /* AppDelegate.m in Sources */,
 				5F17278B217F0DB8009C15D5 /* JDRequest.m in Sources */,
 				5F1727A1217F4BFA009C15D5 /* NSDictionary+LYAddtion.m in Sources */,
