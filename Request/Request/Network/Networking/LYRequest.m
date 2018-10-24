@@ -75,6 +75,11 @@
         self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     }
     self.finished = NO;
+    if (self.httpHeaders) {
+        for (NSString *key in self.httpHeaders.allKeys) {
+            [self.manager.requestSerializer setValue:self.httpHeaders[key] forHTTPHeaderField:key];
+        }
+    }
 }
 
 - (id)jsonParseWithData:(id)data {
@@ -154,7 +159,6 @@
         [self resumeUPLoadImage];
         return;
     }
-    self.md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@",url,[params toString]] md5String];
     if (self.startBlock) {
         self.startBlock(self);
     }
@@ -420,7 +424,9 @@
         if (self.newparams) {
             [params1 setValuesForKeysWithDictionary:self.newparams];
         }
-        NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@",self.url,[params1 toString]] md5String];
+        NSDictionary *httpHeaders = self.httpHeaders?:@{};
+        
+        NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@",self.url,[params1 toString],[httpHeaders toString]] md5String];
         _md5Identifier = md5Identifier;
     }
     return _md5Identifier;

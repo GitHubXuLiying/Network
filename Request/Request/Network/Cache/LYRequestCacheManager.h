@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)cacheRequestWithRequest:(LYRequest *)request;
 
-- (id)cacheRequestWithUrl:(NSString *)url params:(NSDictionary *)params defaultParams:(NSDictionary *)defaultParams newparams:(NSDictionary *)newparams;
+- (id)cacheRequestWithUrl:(NSString *)url params:(NSDictionary *)params defaultParams:(NSDictionary *)defaultParams newparams:(NSDictionary *)newparams httpHeaders:(NSDictionary *)httpHeaders;
 
 - (void)removeCacheWithRequest:(LYRequest *)request;
 

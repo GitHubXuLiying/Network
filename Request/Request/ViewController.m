@@ -49,6 +49,7 @@
     }];
     request.cache = YES;
     request.useCache = YES;
+    request.httpHeaders = @{@"a":@"test"};
     
     LYRequest *request1  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);

@@ -21,10 +21,11 @@
 
 @property (nonatomic, copy)   NSString *baseURL;
 @property (nonatomic, copy)   NSString *url;
-@property (nonatomic, copy) NSDictionary *params;
-@property (nonatomic, copy) NSDictionary *newparams;
+@property (nonatomic, copy)   NSDictionary *params;
+@property (nonatomic, copy)   NSDictionary *newparams;
 @property (nonatomic, copy)   NSDictionary *defaultParams;
 @property (nonatomic, copy)   NSString *md5Identifier;
+@property (nonatomic, copy)   NSDictionary *httpHeaders;
 
 @property (nonatomic, weak) id<LYRequestDelegate> delegate;
 @property (nonatomic, weak) id<RequestDeallocDelegate> deallocDelegate;

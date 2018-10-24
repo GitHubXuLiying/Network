@@ -64,7 +64,7 @@
     return nil;
 }
 
-- (id)cacheRequestWithUrl:(NSString *)url params:(NSDictionary *)params defaultParams:(NSDictionary *)defaultParams newparams:(NSDictionary *)newparams {
+- (id)cacheRequestWithUrl:(NSString *)url params:(NSDictionary *)params defaultParams:(NSDictionary *)defaultParams newparams:(NSDictionary *)newparams httpHeaders:(NSDictionary *)httpHeaders {
     
     NSMutableDictionary *params1 = [NSMutableDictionary dictionary];
     if (defaultParams) {
@@ -76,7 +76,9 @@
     if (newparams) {
         [params1 setValuesForKeysWithDictionary:newparams];
     }
-   NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@",url,[params1 toString]] md5String];
+    NSDictionary *headers = httpHeaders?:@{};
+    
+    NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@",url,[params1 toString],[headers toString]] md5String];
     return [self.cache objectForKey:md5Identifier];
     
 }
