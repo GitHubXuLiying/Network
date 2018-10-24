@@ -65,6 +65,7 @@
     self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     self.callBackIfCanceled = YES;
     self.requestType = LYRequestTypeJSON;
+    self.callBackIfIsRepeatRequest = YES;
 }
 
 - (void)resetDefaultConfig {
@@ -146,16 +147,20 @@
     }
     NSLog(@"________   %@",self.md5Identifier);
     
-    [[LYRequestHandle sharedInstance] addReuest:self];
-    if (self.ignoreExistRequest == NO) {
-        LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
-        if (re) {
+    LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
+    if (re) {
+        if (!self.ignoreExistRequest) {
             NSLog(@"已存在相同的网络请求");
+            [[LYRequestHandle sharedInstance] addReuest:self];
             self.task = re.task;
             return;
         }
+        
+        if (!self.callBackIfIsRepeatRequest) {
+            return;
+        }
     }
-  
+    [[LYRequestHandle sharedInstance] addReuest:self];
     NSString *method = @"GET";
     if (self.requestMethod == POST) {
         method = @"POST";

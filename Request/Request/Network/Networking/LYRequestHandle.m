@@ -64,12 +64,11 @@
 
     LYRequest *ret;
     [self.lock lock];
-    for (NSArray *arr in self.requestItems.allValues) {
-        for (LYRequest *re in arr) {
-            if ([re.md5Identifier isEqualToString:request.md5Identifier] && re.isRunning) {
-                ret = re;
-                break;
-            }
+    NSArray *requests = [self requestsWithMD5Identifier:request.md5Identifier];
+    for (LYRequest *re in requests) {
+        if ([re.md5Identifier isEqualToString:request.md5Identifier] && re.isRunning) {
+            ret = re;
+            break;
         }
     }
     [self.lock unlock];

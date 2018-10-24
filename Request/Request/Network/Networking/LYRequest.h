@@ -54,11 +54,15 @@
 @property (nonatomic, assign) BOOL callBackIfCanceled;
 
 /**
- * 忽略已存在的请求 再发起一个  默认为NO
+ * 忽略已存在的请求,再发起一个  默认为NO
  */
 
 @property (nonatomic, assign) BOOL ignoreExistRequest;
 
+/**
+ * 重复发起的请求 是否回调  默认为YES
+ */
+@property (nonatomic, assign) BOOL callBackIfIsRepeatRequest;
 
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
