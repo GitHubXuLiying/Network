@@ -53,6 +53,13 @@
  */
 @property (nonatomic, assign) BOOL callBackIfCanceled;
 
+/**
+ * 忽略已存在的请求 再发起一个  默认为NO
+ */
+
+@property (nonatomic, assign) BOOL ignoreExistRequest;
+
+
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
 @property(nonatomic,assign) NSInteger identifyTag;//自定义identifyTag

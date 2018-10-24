@@ -14,7 +14,6 @@
 @interface LYRequestHandle ()
 
 @property(nonatomic,strong) NSMutableDictionary *requestItems;
-@property (nonatomic, strong) NSRecursiveLock *lock;
 
 @end
 
@@ -34,7 +33,6 @@
     if (self) {
         self.lock = [[NSRecursiveLock alloc] init];
         self.networkError = YES;
-        self.manager = [AFHTTPSessionManager manager];
         [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
     }
     return self;
@@ -68,7 +66,7 @@
     [self.lock lock];
     for (NSArray *arr in self.requestItems.allValues) {
         for (LYRequest *re in arr) {
-            if (re.md5Identifier == request.md5Identifier && re.isRunning) {
+            if ([re.md5Identifier isEqualToString:request.md5Identifier] && re.isRunning) {
                 ret = re;
                 break;
             }
@@ -127,7 +125,7 @@
     NSString *taskID = MD5Identifier;
     [self.lock lock];
     NSMutableArray *requests = self.requestItems[taskID];
-    if (requests) {
+    if (requests && requests.count) {
         [requests removeAllObjects];
         [self.requestItems setObject:requests forKey:taskID];
     }

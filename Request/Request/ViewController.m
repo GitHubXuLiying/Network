@@ -29,17 +29,45 @@
 }
 
 - (IBAction)request:(id)sender {
-    if (_request == nil) {
-        _request = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
-            NSLog(@"xly--%@",request.responseObject);
-            NSLog(@"xly--%@",@"1111111222222");
-        } failureBlock:^(LYRequest *request) {
-            NSLog(@"xly--%@",request.error);
-        }];
-    }
-    for (int i =0 ; i < 5; i ++) {
-        [_request resume];
-    }
+//    if (_request == nil) {
+//        _request = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+//            NSLog(@"xly--%@",request.responseObject);
+//            NSLog(@"xly--%@",@"1111111222222");
+//        } failureBlock:^(LYRequest *request) {
+//            NSLog(@"xly--%@",request.error);
+//        }];
+//    }
+//    for (int i =0 ; i < 5; i ++) {
+//        [_request resume];
+//    }
+    
+    LYRequest *request  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+        NSLog(@"xly--%@",request.responseObject);
+        NSLog(@"xly--%@",@"1111111222222");
+    } failureBlock:^(LYRequest *request) {
+        NSLog(@"xly--%@",request.error);
+    }];
+
+    
+    LYRequest *request1  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+        NSLog(@"xly--%@",request.responseObject);
+        NSLog(@"xly--%@",@"1111111222222");
+    } failureBlock:^(LYRequest *request) {
+        NSLog(@"xly--%@",request.error);
+    }];
+    request1.ignoreExistRequest = YES;
+    
+    LYRequest *request2  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
+        NSLog(@"xly--%@",request.responseObject);
+        NSLog(@"xly--%@",@"1111111222222");
+    } failureBlock:^(LYRequest *request) {
+        NSLog(@"xly--%@",request.error);
+    }];
+//    request2.ignoreExistRequest = YES;
+
+    [request resume];
+    [request1 resume];
+    [request2 resume];
 }
 
 - (IBAction)groupRequest:(id)sender {

@@ -19,6 +19,7 @@
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *name;
+@property (nonatomic, strong) AFHTTPSessionManager *manager;
 
 @end
 
@@ -55,21 +56,23 @@
 }
 
 - (void)initDefaultConfig {
-    [LYRequestHandle sharedInstance].manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    [LYRequestHandle sharedInstance].manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
+    self.manager = [AFHTTPSessionManager manager];
+
+    self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
     
     self.timeoutInterval = 60;
-    [LYRequestHandle sharedInstance].manager.requestSerializer.timeoutInterval = self.timeoutInterval;
+    self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     self.callBackIfCanceled = YES;
     self.requestType = LYRequestTypeJSON;
 }
 
 - (void)resetDefaultConfig {
-    [LYRequestHandle sharedInstance].manager.requestSerializer.timeoutInterval = self.timeoutInterval;
+    self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     if (self.requestType == LYRequestTypeJSON) {
-        [LYRequestHandle sharedInstance].manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
     } else {
-        [LYRequestHandle sharedInstance].manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     }
     self.finished = NO;
 }
@@ -132,7 +135,7 @@
     }
     
     
-    AFHTTPSessionManager *manager = [LYRequestHandle sharedInstance].manager;
+    AFHTTPSessionManager *manager = self.manager;
     if (self.image) { //上传图片
         [self resumeUPLoadImage];
         return;
@@ -144,14 +147,15 @@
     NSLog(@"________   %@",self.md5Identifier);
     
     [[LYRequestHandle sharedInstance] addReuest:self];
-    LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
-
-    if (re) {
-        NSLog(@"已存在相同的网络请求");
-        self.task = re.task;
-        return;
+    if (self.ignoreExistRequest == NO) {
+        LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
+        if (re) {
+            NSLog(@"已存在相同的网络请求");
+            self.task = re.task;
+            return;
+        }
     }
-    
+  
     NSString *method = @"GET";
     if (self.requestMethod == POST) {
         method = @"POST";
@@ -184,8 +188,7 @@
     if (self.startBlock) {
         self.startBlock(self);
     }
-    AFHTTPSessionManager *manager = [LYRequestHandle sharedInstance].manager;
-    manager.requestSerializer.timeoutInterval = 5 * 60;
+    AFHTTPSessionManager *manager = self.manager;
     self.task  =  [manager POST:self.url parameters:self.params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSData *imageData = UIImageJPEGRepresentation(self.image, 0.4);
         
@@ -245,52 +248,55 @@
 }
 
 - (void)parse {
-    
+    [[LYRequestHandle sharedInstance].lock lock];
     NSArray *requests = [[LYRequestHandle sharedInstance] requestsWithMD5Identifier:self.md5Identifier].copy;
     
     for (NSInteger index = 0;index < requests.count;index ++) {
         LYRequest *req = requests[index];
-        if (index != 0) {
-            req.error = self.error;
-            req.responseObject = self.responseObject;
-        }
-        if (req.error) {
-            if (!(req.error.code == NSURLErrorCancelled && self.callBackIfCanceled == NO)) {
+        if (req == self || req.task == self.task) {
+            if (req != self) {
+                req.error = self.error;
+                req.responseObject = self.responseObject;
+            }
+            if (req.error) {
+                if (!(req.error.code == NSURLErrorCancelled && self.callBackIfCanceled == NO)) {
+                    if (req.endBlock) {
+                        req.endBlock(req);
+                    }
+                    
+                    if (req.failureBlock) {
+                        req.failureBlock(req);
+                    }
+                    
+                    if (req.delegate && [req.delegate respondsToSelector:@selector(requestdidFailWithError:)]) {
+                        [req.delegate requestdidFailWithError:req];
+                    }
+                    
+                    if (req.target && [req.target respondsToSelector:req.action]) {
+                        [req.target performSelector:req.action withObject:req afterDelay:0.0];
+                    }
+                }
+            } else {
                 if (req.endBlock) {
                     req.endBlock(req);
                 }
-                
-                if (req.failureBlock) {
-                    req.failureBlock(req);
+                if (req.successBlock) {
+                    req.successBlock(req);
                 }
-                
-                if (req.delegate && [req.delegate respondsToSelector:@selector(requestdidFailWithError:)]) {
-                    [req.delegate requestdidFailWithError:req];
+                if (req.delegate && [req.delegate respondsToSelector:@selector(requestDidFinishLoading:)]) {
+                    [req.delegate requestDidFinishLoading:req];
                 }
-                
                 if (req.target && [req.target respondsToSelector:req.action]) {
                     [req.target performSelector:req.action withObject:req afterDelay:0.0];
                 }
             }
-        } else {
-            if (req.endBlock) {
-                req.endBlock(req);
-            }
-            if (req.successBlock) {
-                req.successBlock(req);
-            }
-            if (req.delegate && [req.delegate respondsToSelector:@selector(requestDidFinishLoading:)]) {
-                [req.delegate requestDidFinishLoading:req];
-            }
-            if (req.target && [req.target respondsToSelector:req.action]) {
-                [req.target performSelector:req.action withObject:req afterDelay:0.0];
-            }
+            req.finished = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:KLYRequestDidFinish object:self];
+            [[LYRequestHandle sharedInstance] deleteRequest:req];
         }
-        req.finished = YES;
+        
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:KLYRequestDidFinish object:self];
-    [[LYRequestHandle sharedInstance] deleteRequestsWithMD5Identifier:self.md5Identifier];
+    [[LYRequestHandle sharedInstance].lock unlock];
 }
 
 - (void)removewRequest:(LYRequest *)request {

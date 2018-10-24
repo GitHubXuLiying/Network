@@ -17,11 +17,11 @@
 @interface LYRequestHandle : NSObject <LYRequestDelegate,RequestDeallocDelegate>
 
 @property (nonatomic, assign) BOOL networkError;//未设置
+@property (nonatomic, strong) NSRecursiveLock *lock;
+
 
 @property (nonatomic, copy) AFNetworkReachabilityBlock networkStatusBlock;
-@property (nonatomic, strong) AFHTTPSessionManager *manager;
-
-
+\
 + (LYRequestHandle *)sharedInstance;
 
 
@@ -34,6 +34,7 @@
 - (void)cancelRequestWithUrl:(NSString *)url params:(NSDictionary *)params;
 - (NSArray *)requestsWithMD5Identifier:(NSString *)MD5Identifier;
 - (void)deleteRequestsWithMD5Identifier:(NSString *)MD5Identifier;
+- (void)deleteRequest:(LYRequest *)request;
 
 - (LYRequest *)existRequest:(LYRequest *)request;
 - (void)addReuest:(LYRequest *)request;
