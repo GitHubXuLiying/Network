@@ -7,9 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "LYNetworking.h"
 #import "JDRequest.h"
-#import "LYGroupRequest.h"
-#import "NSDictionary+LYAddtion.h"
 
 @interface ViewController ()
 
@@ -22,7 +21,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     // Do any additional setup after loading the view, typically from a nib.
 }
 
