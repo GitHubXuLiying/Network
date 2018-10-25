@@ -9,7 +9,6 @@
 #import "LYRequest.h"
 #import "AFNetworking.h"
 #import "LYRequestHandle.h"
-#import "RequestUrls.h"
 #import "NSString+LYAddtion.h"
 #import "LYRequestCacheManager.h"
 #import "NSDictionary+LYAddtion.h"

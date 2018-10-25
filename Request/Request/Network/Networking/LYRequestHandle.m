@@ -204,6 +204,12 @@
     }
 }
 
+- (void)cancelRequests:(NSArray *)requests {
+    for (LYRequest *request in requests) {
+        [self cancelRequest:request];
+    }
+}
+
 - (void)requestWillDealloc:(LYRequest *)request {
     if (request) {
         [self deleteRequest:request];

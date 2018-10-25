@@ -7,6 +7,7 @@
 //
 
 #import "LYGroupRequest.h"
+#import "LYRequestHandle.h"
 
 @interface LYGroupRequest ()
 
@@ -64,6 +65,14 @@
     } else {
         NSLog(@"xly--%@",@"正在请求");
     }
+}
+
+- (void)cancel {
+    [[LYRequestHandle sharedInstance] cancelRequests:self.requests];
+}
+
+- (NSArray *)requests {
+    return self.requests;
 }
 
 @end

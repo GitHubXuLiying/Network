@@ -29,6 +29,7 @@
 - (void)cancelRequestWithMD5Identifier:(NSString *)MD5Identifier;
 - (void)cancelAllRequest;
 - (void)cancelRequest:(LYRequest *)request;
+- (void)cancelRequests:(NSArray *)requests;
 - (void)cancelRequestWithDelegate:(id)delegate;
 - (void)cancelRequestWithUrl:(NSString *)url;
 - (void)cancelRequestWithUrl:(NSString *)url params:(NSDictionary *)params;

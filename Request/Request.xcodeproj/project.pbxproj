@@ -58,6 +58,7 @@
 		5F1727A0217F4BFA009C15D5 /* NSDictionary+LYAddtion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+LYAddtion.m"; sourceTree = "<group>"; };
 		5F1727A4218050BA009C15D5 /* LYRequestCacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYRequestCacheManager.h; sourceTree = "<group>"; };
 		5F1727A5218050BA009C15D5 /* LYRequestCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LYRequestCacheManager.m; sourceTree = "<group>"; };
+		5F1727B121816074009C15D5 /* LYNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYNetworking.h; sourceTree = "<group>"; };
 		5F189C762178A82200134EF3 /* Request.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Request.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F189C792178A82200134EF3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5F189C7A2178A82200134EF3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -74,7 +75,6 @@
 		5F189C992178A82400134EF3 /* RequestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RequestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F189C9D2178A82400134EF3 /* RequestUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RequestUITests.m; sourceTree = "<group>"; };
 		5F189C9F2178A82400134EF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5F189CAC2178A84900134EF3 /* RequestUrls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestUrls.h; sourceTree = "<group>"; };
 		5F189CAE2178A84900134EF3 /* LYRequestHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRequestHandle.h; sourceTree = "<group>"; };
 		5F189CB12178A84900134EF3 /* LYRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRequest.m; sourceTree = "<group>"; };
 		5F189CB42178A84900134EF3 /* LYRequestHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRequestHandle.m; sourceTree = "<group>"; };
@@ -203,7 +203,7 @@
 		5F189CAB2178A84900134EF3 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				5F189CAC2178A84900134EF3 /* RequestUrls.h */,
+				5F1727B121816074009C15D5 /* LYNetworking.h */,
 				5F1727A32180508F009C15D5 /* Cache */,
 				5F172798217F4B58009C15D5 /* Category */,
 				5F189CAD2178A84900134EF3 /* Networking */,

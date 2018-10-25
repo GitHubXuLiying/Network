@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithRequests:(NSArray *)requests completed:(nonnull LYGroupRequestCompletedBlock)block;
 
 - (void)resume;
+- (void)cancel;
+
+- (NSArray *)requests;
 
 @end
 
