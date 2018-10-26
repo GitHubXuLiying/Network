@@ -6,16 +6,16 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/GitHubXuLiying/Network" # 你的主页
   s.source       = { :git => "https://github.com/GitHubXuLiying/Network.git", :tag => "#{s.version}" }
-  s.source_files = "LYNetworking/*.{h,m}" 
+  s.source_files = "LYNetworkingKit/*.{h,m}" 
 
 
   s.subspec "Category" do |ss|
-    ss.source_files = "LYNetworking/Category/*.{h,m}" 
+    ss.source_files = "LYNetworkingKit/Category/*.{h,m}" 
   end
 
   s.subspec "Networking" do |ss|
-    ss.source_files = "LYNetworking/Networking/*.{h,m}" 
-    ss.dependency "LYNetworking/Category"
+    ss.source_files = "LYNetworkingKit/Networking/*.{h,m}" 
+    ss.dependency "LYNetworkingKit/Category"
     ss.dependency "AFNetworking" 
   end
 
