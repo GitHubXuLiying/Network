@@ -32,3 +32,16 @@ typedef void (^LYRequestEndBlock)(LYRequest *request);
 typedef void (^AFNetworkReachabilityBlock)(AFNetworkReachabilityStatus status);
 
 #define KLYRequestDidFinish      @"KRequestDidFinish"
+
+#ifdef DEBUG
+
+#define LYLog( s, ... )\
+if ([LYRequestHandle sharedInstance].debugLogEnabled) {\
+NSLog(@"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__]);\
+} else {}
+
+#else
+
+#define LYLog(...)
+
+#endif

@@ -227,13 +227,13 @@
             case AFNetworkReachabilityStatusUnknown:
                 break;
             case AFNetworkReachabilityStatusNotReachable:
-                NSLog(@"无法连接");
+                LYLog(@"无法连接");
                 break;
             case AFNetworkReachabilityStatusReachableViaWWAN:
-                NSLog(@"蜂窝");
+                LYLog(@"蜂窝");
                 break;
             case AFNetworkReachabilityStatusReachableViaWiFi:
-                NSLog(@"wifi");
+                LYLog(@"wifi");
                 break;
                 
             default:

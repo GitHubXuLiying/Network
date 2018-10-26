@@ -21,6 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [LYRequestHandle sharedInstance].debugLogEnabled = NO;
     // Do any additional setup after loading the view, typically from a nib.
 }
 

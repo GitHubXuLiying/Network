@@ -14,21 +14,29 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - HexColors (2.2.1)
   - PINCache (2.3)
+  - TSMessages (0.9.12):
+    - HexColors (~> 2.2.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.2.1)
   - PINCache
+  - TSMessages
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - HexColors
     - PINCache
+    - TSMessages
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  HexColors: abfd172e329dab59888614ccba6f216cec59289d
   PINCache: ce36ed282031b92fc7733ffe831f474ff80fddc2
+  TSMessages: c8cc7b80f2a833af533872cd02010cac061532cc
 
-PODFILE CHECKSUM: 520496f9db96aaccad929586137e00ea803690fb
+PODFILE CHECKSUM: 1f29f2619a28c0ba6450b33e53ec983ab9088b61
 
 COCOAPODS: 1.5.3

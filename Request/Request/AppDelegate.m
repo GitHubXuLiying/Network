@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "LYNetworking.h"
+#import "TSMessage.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +19,25 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [[LYRequestHandle sharedInstance] startMonitoring];
+    [LYRequestHandle sharedInstance].networkStatusBlock = ^(AFNetworkReachabilityStatus status) {
+        switch (status) {
+            case AFNetworkReachabilityStatusNotReachable:
+                    [TSMessage showNotificationWithTitle:@"Network Error" type:TSMessageNotificationTypeError];
+                break;
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                [TSMessage showNotificationWithTitle:@"已切换至WIFI" type:TSMessageNotificationTypeSuccess];
+                break;
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                [TSMessage showNotificationWithTitle:@"已切换至3G/4G" type:TSMessageNotificationTypeSuccess];
+                break;
+                
+            default:
+                break;
+        }
+        
+    };
     return YES;
 }
 

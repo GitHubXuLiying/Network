@@ -22,7 +22,7 @@
 @implementation LYGroupRequest
 
 - (void)dealloc {
-    NSLog(@"*****************************xly--%@",@"dealloc");
+    LYLog(@"*****************************xly--%@",@"dealloc");
 }
 
 - (void)lyRequestDidFinish:(NSNotification *)notification {
@@ -63,7 +63,7 @@
             [request resume];
         }
     } else {
-        NSLog(@"xly--%@",@"正在请求");
+        LYLog(@"xly--%@",@"正在请求");
     }
 }
 
@@ -71,7 +71,7 @@
     [[LYRequestHandle sharedInstance] cancelRequests:self.requests];
 }
 
-- (NSArray *)requests {
+- (NSArray *)groupRequests {
     return self.requests;
 }
 

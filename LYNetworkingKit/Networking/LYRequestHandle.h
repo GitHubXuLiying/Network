@@ -17,6 +17,7 @@
 @interface LYRequestHandle : NSObject <LYRequestDelegate,RequestDeallocDelegate>
 
 @property (nonatomic, assign) BOOL networkError;//未设置
+@property (nonatomic, assign) BOOL debugLogEnabled;
 @property (nonatomic, strong) NSRecursiveLock *lock;
 
 

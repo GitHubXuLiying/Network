@@ -30,7 +30,7 @@
     if (self.task && self.isRunning) {
         [self.task cancel];
     }
-    NSLog(@"___requestDealloc____");
+    LYLog(@"___requestDealloc____");
 }
 
 - (instancetype)initWithUrl:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock {
@@ -151,8 +151,8 @@
         [params setValuesForKeysWithDictionary:self.newparams];
     }
     
-    NSLog(@"请求url____%@",url);
-    NSLog(@"请求参数____%@",params);
+    LYLog(@"请求url____%@",url);
+    LYLog(@"请求参数____%@",params);
     AFHTTPSessionManager *manager = self.manager;
     if (self.isUPloadImage) { //上传图片
         [self resumeUPLoadImage];
@@ -161,7 +161,7 @@
     if (self.startBlock) {
         self.startBlock(self);
     }
-    NSLog(@"________   %@",self.md5Identifier);
+    LYLog(@"________   %@",self.md5Identifier);
     
     if (self.useCache) {
         id responseObject = [[LYRequestCacheManager sharedInstance] cacheRequestWithRequest:self];
@@ -174,7 +174,7 @@
     LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
     if (re) {
         if (!self.ignoreExistRequest) {
-            NSLog(@"已存在相同的网络请求");
+            LYLog(@"已存在相同的网络请求");
             [[LYRequestHandle sharedInstance] addReuest:self];
             self.task = re.task;
             return;
@@ -232,7 +232,7 @@
         [formData appendPartWithFileData:imageData name:self.name fileName:imageFileName mimeType:@"image/jpeg"];
         
     } progress:^(NSProgress * _Nonnull uploadProgress) {
-        NSLog(@"****____%f",(double)uploadProgress.completedUnitCount/uploadProgress.totalUnitCount);
+        LYLog(@"****____%f",(double)uploadProgress.completedUnitCount/uploadProgress.totalUnitCount);
         if (self.uploadImageProgressDelegate && [self.uploadImageProgressDelegate respondsToSelector:@selector(uploadImageProgress:)]) {
             [self.uploadImageProgressDelegate uploadImageProgress:(double)uploadProgress.completedUnitCount/uploadProgress.totalUnitCount];
         }

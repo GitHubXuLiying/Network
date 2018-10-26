@@ -4,6 +4,7 @@ target 'Request' do
 
 pod 'AFNetworking', '~> 3.2.1'
 pod 'PINCache'
+pod 'TSMessages'
 #pod 'LYNetworkingKit'
 
 end

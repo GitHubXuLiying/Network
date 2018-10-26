@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resume;
 - (void)cancel;
 
-- (NSArray *)requests;
+- (NSArray *)groupRequests;
 
 @end
 

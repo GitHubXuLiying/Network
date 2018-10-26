@@ -8,12 +8,17 @@
 
 #import <Foundation/Foundation.h>
 @class LYRequest;
+@class PINCache;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LYRequestCacheManager : NSObject
 
+
 + (LYRequestCacheManager *)sharedInstance;
+
+@property (nonatomic, strong,readonly) PINCache *pinCache;
+
 
 - (void)storeRequest:(LYRequest *)request;
 
