@@ -182,21 +182,11 @@
 			isa = PBXGroup;
 			children = (
 				5F5D8F2E2182E6A2009AD70D /* LYNetworking.h */,
-				5F5D8F1B2182E6A2009AD70D /* Cache */,
 				5F5D8F1E2182E6A2009AD70D /* Category */,
 				5F5D8F252182E6A2009AD70D /* Networking */,
 			);
 			name = LYNetworking;
 			path = ../../LYNetworking;
-			sourceTree = "<group>";
-		};
-		5F5D8F1B2182E6A2009AD70D /* Cache */ = {
-			isa = PBXGroup;
-			children = (
-				5F5D8F1C2182E6A2009AD70D /* LYRequestCacheManager.h */,
-				5F5D8F1D2182E6A2009AD70D /* LYRequestCacheManager.m */,
-			);
-			path = Cache;
 			sourceTree = "<group>";
 		};
 		5F5D8F1E2182E6A2009AD70D /* Category */ = {
@@ -223,6 +213,8 @@
 				5F5D8F2C2182E6A2009AD70D /* LYRequestDelegate.h */,
 				5F5D8F272182E6A2009AD70D /* LYRequestHandle.h */,
 				5F5D8F2B2182E6A2009AD70D /* LYRequestHandle.m */,
+				5F5D8F1C2182E6A2009AD70D /* LYRequestCacheManager.h */,
+				5F5D8F1D2182E6A2009AD70D /* LYRequestCacheManager.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
