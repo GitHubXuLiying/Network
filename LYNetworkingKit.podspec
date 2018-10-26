@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "LYNetworkingKit" 
-  s.version      = "1.0.1"        
+  s.version      = "1.0.2"        
   s.license      = "MIT"          
   s.summary      = "AFNetworking封装" # 
 
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   s.subspec "Networking" do |ss|
     ss.source_files = "LYNetworkingKit/Networking/*.{h,m}" 
-    ss.dependency "LYNetworkingKit/Category/*"
+    ss.dependency "LYNetworkingKit/Category"
     ss.dependency "AFNetworking" 
   end
 
