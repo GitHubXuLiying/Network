@@ -55,13 +55,13 @@
     NSRange range = {0,jsonString.length};
     [mutStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:range];
     NSRange range2 = {0,mutStr.length};
-
+    
     [mutStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:range2];
     return mutStr;
 }
 
 - (LYRequest *)existRequest:(LYRequest *)request {
-
+    
     LYRequest *ret;
     [self.lock lock];
     NSArray *requests = [self requestsWithMD5Identifier:request.md5Identifier];

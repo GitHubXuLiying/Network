@@ -54,7 +54,7 @@
 
 - (void)initDefaultConfig {
     self.manager = [AFHTTPSessionManager manager];
-
+    
     self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
     self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
     
@@ -209,7 +209,7 @@
         }
     }];
     
-
+    
     [self.task resume];
 }
 

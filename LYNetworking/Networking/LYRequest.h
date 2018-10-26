@@ -91,34 +91,34 @@
 - (void)resumeWithNewParams:(NSDictionary *)params;
 
 + (instancetype)getRequstWithURL:(NSString *)url
-                       params:(NSDictionary *)params
-                 successBlock:(LYRequestSucBlock)successBlock
-                 failureBlock:(LYRequestFailBlock)failureBlock;
+                          params:(NSDictionary *)params
+                    successBlock:(LYRequestSucBlock)successBlock
+                    failureBlock:(LYRequestFailBlock)failureBlock;
 
 + (instancetype)getRequstWithURL:(NSString *)url
-                       params:(NSDictionary *)params
-                     delegate:(id<LYRequestDelegate>)delegate;
+                          params:(NSDictionary *)params
+                        delegate:(id<LYRequestDelegate>)delegate;
 
 + (instancetype)getRequstWithURL:(NSString *)url
-                       params:(NSDictionary*)params
-                       target:(id)target
-                       action:(SEL)action;
+                          params:(NSDictionary*)params
+                          target:(id)target
+                          action:(SEL)action;
 
 /********************************************************************************************************/
 
 + (instancetype)postRequstWithURL:(NSString *)url
-                        params:(NSDictionary *)params
-                  successBlock:(LYRequestSucBlock)successBlock
-                  failureBlock:(LYRequestFailBlock)failureBlock;
+                           params:(NSDictionary *)params
+                     successBlock:(LYRequestSucBlock)successBlock
+                     failureBlock:(LYRequestFailBlock)failureBlock;
 
 + (instancetype)postRequstWithURL:(NSString *)url
-                        params:(NSDictionary*)params
-                      delegate:(id<LYRequestDelegate>)delegate;
+                           params:(NSDictionary*)params
+                         delegate:(id<LYRequestDelegate>)delegate;
 
 + (instancetype)postRequstWithURL:(NSString *)url
-                        params:(NSDictionary*)params
-                        target:(id)target
-                        action:(SEL)action;
+                           params:(NSDictionary*)params
+                           target:(id)target
+                           action:(SEL)action;
 
 /********************************************************************************************************/
 
