@@ -14,21 +14,34 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - LYNetworkingKit (1.0.2):
+    - AFNetworking
+    - LYNetworkingKit/Category (= 1.0.2)
+    - LYNetworkingKit/Networking (= 1.0.2)
+    - PINCache
+  - LYNetworkingKit/Category (1.0.2):
+    - AFNetworking
+    - PINCache
+  - LYNetworkingKit/Networking (1.0.2):
+    - AFNetworking
+    - LYNetworkingKit/Category
+    - PINCache
   - PINCache (2.3)
 
 DEPENDENCIES:
-  - AFNetworking (~> 3.2.1)
-  - PINCache
+  - LYNetworkingKit
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - LYNetworkingKit
     - PINCache
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  LYNetworkingKit: 15200cf2820581ce75120ceba8bc6c97cf62f36b
   PINCache: ce36ed282031b92fc7733ffe831f474ff80fddc2
 
-PODFILE CHECKSUM: 9f527ecb27f0b29bb48b0a71a122e44e0fadd917
+PODFILE CHECKSUM: 7e11c41ca4050a4ef6140e09afc8913e7ba21b76
 
 COCOAPODS: 1.5.3
