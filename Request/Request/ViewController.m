@@ -21,7 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [LYRequestHandle sharedInstance].debugLogEnabled = NO;
+    [LYRequestHandle sharedInstance].debugLogEnabled = YES;
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -35,7 +35,6 @@
     }];
     request.cache = YES;
     request.useCache = YES;
-    request.httpHeaders = @{@"a":@"test"};
     
     JDRequest *request1  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);
@@ -43,7 +42,7 @@
     } failureBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.error);
     }];
-    request1.ignoreExistRequest = YES;
+//    request1.ignoreExistRequest = YES;
     
     JDRequest *request2  = [JDRequest postRequstWithURL:@"meituApi" params:@{@"page" : @"1"} successBlock:^(LYRequest *request) {
         NSLog(@"xly--%@",request.responseObject);

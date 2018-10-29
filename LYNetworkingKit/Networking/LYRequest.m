@@ -412,23 +412,21 @@
 }
 
 - (NSString *)md5Identifier {
-    if (_md5Identifier == nil) {
-        NSMutableDictionary *params1 = [NSMutableDictionary dictionary];
-        if (self.defaultParams) {
-            [params1 setValuesForKeysWithDictionary:self.defaultParams];
-        }
-        if (self.params) {
-            [params1 setValuesForKeysWithDictionary:self.params];
-        }
-        if (self.newparams) {
-            [params1 setValuesForKeysWithDictionary:self.newparams];
-        }
-        NSDictionary *httpHeaders = self.httpHeaders?:@{};
-        
-        NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@",self.url,[params1 toString],[httpHeaders toString]] md5String];
-        _md5Identifier = md5Identifier;
+    NSMutableDictionary *params1 = [NSMutableDictionary dictionary];
+    if (self.defaultParams) {
+        [params1 setValuesForKeysWithDictionary:self.defaultParams];
     }
-    return _md5Identifier;
+    if (self.params) {
+        [params1 setValuesForKeysWithDictionary:self.params];
+    }
+    if (self.newparams) {
+        [params1 setValuesForKeysWithDictionary:self.newparams];
+    }
+    NSDictionary *httpHeaders = self.httpHeaders ? : @{};
+    NSDictionary *md5Params = self.md5IdentifierParams ? : @{};
+    
+    NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@;md5Params:%@",self.url,[params1 toString],[httpHeaders toString],[md5Params toString]] md5String];
+    return md5Identifier;
 }
 
 @end

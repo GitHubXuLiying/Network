@@ -24,8 +24,13 @@
 @property (nonatomic, copy)   NSDictionary *params;
 @property (nonatomic, copy)   NSDictionary *newparams;
 @property (nonatomic, copy)   NSDictionary *defaultParams;
-@property (nonatomic, copy)   NSString *md5Identifier;
+@property (nonatomic, copy,readonly)   NSString *md5Identifier;
 @property (nonatomic, copy)   NSDictionary *httpHeaders;
+
+/**
+ * 该参数参与当前request唯一标志（md5Identifier）的运算，不会影响实际参数
+ */
+@property (nonatomic, copy)   NSDictionary *md5IdentifierParams;
 
 @property (nonatomic, weak) id<LYRequestDelegate> delegate;
 @property (nonatomic, weak) id<RequestDeallocDelegate> deallocDelegate;
