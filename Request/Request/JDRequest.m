@@ -10,8 +10,8 @@
 
 @implementation JDRequest
 
-- (void)initDefaultConfig {
-    [super initDefaultConfig];
+- (void)initConfig {
+    [super initConfig];
     
     self.baseURL = @"https://www.apiopen.top/";
     self.defaultParams = @{

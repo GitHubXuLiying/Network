@@ -25,17 +25,15 @@
 
 + (LYRequestHandle *)sharedInstance;
 
-
-- (void)addRequest:(LYRequest *)request MD5Identifier:(NSString *)MD5Identifier;
-- (void)cancelRequestWithMD5Identifier:(NSString *)MD5Identifier;
+- (void)cancelRequestWithIdentifier:(NSString *)identifier;
 - (void)cancelAllRequest;
 - (void)cancelRequest:(LYRequest *)request;
 - (void)cancelRequests:(NSArray *)requests;
 - (void)cancelRequestWithDelegate:(id)delegate;
 - (void)cancelRequestWithUrl:(NSString *)url;
 - (void)cancelRequestWithUrl:(NSString *)url params:(NSDictionary *)params;
-- (NSArray *)requestsWithMD5Identifier:(NSString *)MD5Identifier;
-- (void)deleteRequestsWithMD5Identifier:(NSString *)MD5Identifier;
+- (NSArray *)requestsWithIdentifier:(NSString *)identifier;
+- (void)deleterequestsWithIdentifier:(NSString *)identifier;
 - (void)deleteRequest:(LYRequest *)request;
 
 - (LYRequest *)existRequest:(LYRequest *)request;

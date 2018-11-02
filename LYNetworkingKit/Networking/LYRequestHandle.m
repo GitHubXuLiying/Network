@@ -61,28 +61,39 @@
 }
 
 - (LYRequest *)existRequest:(LYRequest *)request {
-    
-    LYRequest *ret;
-    [self.lock lock];
-    NSArray *requests = [self requestsWithMD5Identifier:request.md5Identifier];
-    for (LYRequest *re in requests) {
-        if ([re.md5Identifier isEqualToString:request.md5Identifier] && re.isRunning) {
-            ret = re;
-            break;
+    NSString *md5ID = request.identifier;
+    if (md5ID && md5ID.length) {
+        LYRequest *ret;
+        [self.lock lock];
+        NSArray *requests = [self requestsWithIdentifier:md5ID];
+        for (LYRequest *re in requests) {
+            if ([re.identifier isEqualToString:md5ID] && re.isRunning) {
+                ret = re;
+                break;
+            }
         }
+        [self.lock unlock];
+        return ret;
+    } else {
+        return nil;
     }
-    [self.lock unlock];
-    return ret;
+    
 }
 
-- (NSArray *)requestsWithMD5Identifier:(NSString *)MD5Identifier {
-    return self.requestItems[MD5Identifier];
+- (NSArray *)requestsWithIdentifier:(NSString *)identifier {
+    if (!identifier || identifier.length == 0) {
+        return nil;
+    }
+    return self.requestItems[identifier];
 }
 
 - (void)addReuest:(LYRequest *)request {
-    [self.lock lock];
-    [self addRequest:request MD5Identifier:request.md5Identifier];
-    [self.lock unlock];
+    NSString *md5Id = request.identifier;
+    if (md5Id && md5Id.length) {
+        [self.lock lock];
+        [self addRequest:request identifier:md5Id];
+        [self.lock unlock];
+    }
 }
 
 - (NSMutableDictionary *)requestItems {
@@ -93,10 +104,10 @@
 }
 
 
-- (void)addRequest:(LYRequest *)request MD5Identifier:(NSString *)MD5Identifier {
-    if (request) {
+- (void)addRequest:(LYRequest *)request identifier:(NSString *)identifier {
+    if (request && identifier && identifier.length) {
         [self.lock lock];
-        NSString *taskID = MD5Identifier;
+        NSString *taskID = identifier;
         NSMutableArray *requests = self.requestItems[taskID];
         if (requests == nil) {
             requests = [NSMutableArray array];
@@ -108,9 +119,9 @@
 }
 
 - (void)deleteRequest:(LYRequest *)request {
-    if (request) {
+    NSString *taskID = request.identifier;
+    if (request && taskID && taskID.length) {
         [self.lock lock];
-        NSString *taskID = request.md5Identifier;
         NSMutableArray *requests = self.requestItems[taskID];
         if (requests && [requests containsObject:request]) {
             [requests removeObject:request];
@@ -120,27 +131,31 @@
     }
 }
 
-- (void)deleteRequestsWithMD5Identifier:(NSString *)MD5Identifier {
-    NSString *taskID = MD5Identifier;
-    [self.lock lock];
-    NSMutableArray *requests = self.requestItems[taskID];
-    if (requests && requests.count) {
-        [requests removeAllObjects];
-        [self.requestItems setObject:requests forKey:taskID];
+- (void)deleterequestsWithIdentifier:(NSString *)identifier {
+    NSString *taskID = identifier;
+    if (taskID && taskID.length) {
+        [self.lock lock];
+        NSMutableArray *requests = self.requestItems[taskID];
+        if (requests && requests.count) {
+            [requests removeAllObjects];
+            [self.requestItems setObject:requests forKey:taskID];
+        }
+        [self.lock unlock];
     }
-    [self.lock unlock];
 }
 
-- (void)cancelRequestWithMD5Identifier:(NSString *)MD5Identifier {
-    NSString *taskID = MD5Identifier;
-    [self.lock lock];
-    NSMutableArray *requests = self.requestItems[taskID];
-    if (requests && requests.count) {
-        for (LYRequest *re in requests) {
-            [self cancelRequest:re];
+- (void)cancelRequestWithIdentifier:(NSString *)identifier {
+    if (identifier && identifier.length) {
+        NSString *taskID = identifier;
+        [self.lock lock];
+        NSMutableArray *requests = self.requestItems[taskID];
+        if (requests && requests.count) {
+            for (LYRequest *re in requests) {
+                [self cancelRequest:re];
+            }
         }
+        [self.lock unlock];
     }
-    [self.lock unlock];
 }
 
 - (void)cancelAllRequest {
@@ -199,7 +214,7 @@
     if (request) {
         [self.lock lock];
         [[request task] cancel];
-        [self deleteRequest:request];
+//        [self deleteRequest:request];
         [self.lock unlock];
     }
 }

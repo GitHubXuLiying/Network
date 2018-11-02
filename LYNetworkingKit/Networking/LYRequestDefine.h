@@ -31,6 +31,8 @@ typedef void (^LYRequestEndBlock)(LYRequest *request);
 
 typedef void (^AFNetworkReachabilityBlock)(AFNetworkReachabilityStatus status);
 
+typedef NSMutableDictionary* (^LYParseIdentifierParamsBlock)(NSMutableDictionary *IDParams);
+
 #define KLYRequestDidFinish      @"KRequestDidFinish"
 
 #ifdef DEBUG

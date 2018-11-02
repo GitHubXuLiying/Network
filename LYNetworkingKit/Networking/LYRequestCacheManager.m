@@ -50,15 +50,15 @@
 - (void)storeRequest:(LYRequest *)request {
     
     if (request && request.responseObject) {
-        [self.cache setObject:request.responseObject forKey:request.md5Identifier];
+        [self.cache setObject:request.responseObject forKey:request.identifier];
     }
 }
 
 - (id)cacheRequestWithRequest:(LYRequest *)request {
     
-    NSString *md5Identifier = request.md5Identifier;
-    if (md5Identifier) {
-        return [self.cache objectForKey:md5Identifier];
+    NSString *identifier = request.identifier;
+    if (identifier) {
+        return [self.cache objectForKey:identifier];
     }
     return nil;
 }
@@ -77,14 +77,14 @@
     }
     NSDictionary *headers = httpHeaders?:@{};
     
-    NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@",url,[params1 toString],[headers toString]] md5String];
-    return [self.cache objectForKey:md5Identifier];
+    NSString *identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@",url,[params1 toString],[headers toString]] md5String];
+    return [self.cache objectForKey:identifier];
     
 }
 
 
 - (void)removeCacheWithRequest:(LYRequest *)request {
-    [self.cache removeObjectForKey:request.md5Identifier];
+    [self.cache removeObjectForKey:request.identifier];
 }
 
 - (void)removeAllRequestCache {

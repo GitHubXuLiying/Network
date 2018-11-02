@@ -18,19 +18,21 @@
 @property (nonatomic, assign) LYRequestType requestType;
 @property (nonatomic, strong) NSURLSessionDataTask *task;
 
-
 @property (nonatomic, copy)   NSString *baseURL;
 @property (nonatomic, copy)   NSString *url;
 @property (nonatomic, copy)   NSDictionary *params;
-@property (nonatomic, copy)   NSDictionary *newparams;
 @property (nonatomic, copy)   NSDictionary *defaultParams;
-@property (nonatomic, copy,readonly)   NSString *md5Identifier;
 @property (nonatomic, copy)   NSDictionary *httpHeaders;
 
 /**
- * 该参数参与当前request唯一标志（md5Identifier）的运算，不会影响实际参数
+ * 唯一标志，用于缓存，去重，等等 可以自定义，如果没有指定自动根据请求url,params等自动生成
  */
-@property (nonatomic, copy)   NSDictionary *md5IdentifierParams;
+@property (nonatomic, copy)   NSString *identifier;
+
+/**
+ * 该参数参与当前request唯一标志（identifier）的运算，不会影响实际参数
+ */
+@property (nonatomic, copy)   NSDictionary *identifierParams;
 
 @property (nonatomic, weak) id<LYRequestDelegate> delegate;
 @property (nonatomic, weak) id<RequestDeallocDelegate> deallocDelegate;
@@ -43,6 +45,11 @@
 @property (nonatomic, copy) LYRequestSucBlock failureBlock;
 @property (nonatomic, copy) LYRequestStartBlock startBlock;
 @property (nonatomic, copy) LYRequestEndBlock endBlock;
+
+/**
+ * 处理生成Identifier的字典 比如增加、去除key
+ */
+@property (nonatomic, copy) LYParseIdentifierParamsBlock parseIDParamsBlock;
 
 
 @property (nonatomic, strong) id responseObject;
@@ -72,16 +79,34 @@
  */
 @property (nonatomic, assign) BOOL callBackIfIsRepeatRequest;
 
+/**
+ * 是否缓存请求数据 默认为NO
+ */
 @property (nonatomic, assign) BOOL cache;
+
+/**
+ * 是否使用缓存数据 默认为NO
+ */
 @property (nonatomic, assign) BOOL useCache;
 
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
-@property(nonatomic,assign) NSInteger identifyTag;//自定义identifyTag
+/**
+ * 自定义的identifyTag
+ */
+@property(nonatomic,assign) NSInteger identifyTag;
+
+/**
+ * 可以重写这个方法 修改相关默认配置  在创建对象时调用
+ */
+- (void)initConfig;
+/**
+ * 可以重写这个方法 修改相关默认配置 在调用resume时调用
+ */
+- (void)resetConfig;
 
 - (instancetype)initWithUrl:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
-- (void)initDefaultConfig;
 
 - (instancetype)initWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock;
 
@@ -92,8 +117,8 @@
 
 
 - (void)resume;
+- (void)cancel;
 
-- (void)resumeWithNewParams:(NSDictionary *)params;
 
 + (instancetype)getRequstWithURL:(NSString *)url
                           params:(NSDictionary *)params

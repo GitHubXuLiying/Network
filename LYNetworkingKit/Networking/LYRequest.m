@@ -48,8 +48,13 @@
         self.successBlock = successBlock;
         self.failureBlock = failureBlock;
         self.deallocDelegate = [LYRequestHandle sharedInstance];
+        [self initConfig];
     }
     return self;
+}
+
+- (void)initConfig {
+    
 }
 
 - (void)initDefaultConfig {
@@ -65,7 +70,7 @@
     self.callBackIfIsRepeatRequest = YES;
 }
 
-- (void)resetDefaultConfig {
+- (void)resetConfig {
     [LYRequestCacheManager sharedInstance];
     self.manager.requestSerializer.timeoutInterval = self.timeoutInterval;
     if (self.requestType == LYRequestTypeJSON) {
@@ -81,9 +86,18 @@
     }
 }
 
-- (id)jsonParseWithData:(id)data {
-    self.responseObject = data;
-    return data;
+- (void)jsonParseWithData:(id)data {
+    [[LYRequestHandle sharedInstance].lock lock];
+    if ([data isKindOfClass:NSError.class]) {
+        self.error = data;
+        self.responseObject = nil;
+        [self parse];
+    } else {
+        self.responseObject = data;
+        self.error = nil;
+        [self parse];
+    }
+    [[LYRequestHandle sharedInstance].lock unlock];
 }
 
 - (instancetype)initWithImage:(UIImage *)image url:(NSString *)url params:(NSDictionary *)params fileName:(NSString *)fileName name:(NSString *)name delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock {
@@ -124,17 +138,20 @@
 }
 
 - (void)resume {
-    [self resumeWithParams:nil];
+    if (self.task == nil || self.finished == YES) {
+        [self resumeWithParams:nil];
+    } else {
+        LYLog(@"xly--%@",@"正在请求。。。");
+    }
 }
 
-- (void)resumeWithNewParams:(NSDictionary *)params {
-    self.newparams = params;
-    [self resumeWithParams:params];
+- (void)cancel {
+    [[LYRequestHandle sharedInstance] cancelRequest:self];
 }
 
 - (void)resumeWithParams:(NSDictionary *)paramss {
     
-    [self resetDefaultConfig];
+    [self resetConfig];
     
     NSString *url = self.url;
     if (self.baseURL) {
@@ -147,9 +164,6 @@
     if (self.params) {
         [params setValuesForKeysWithDictionary:self.params];
     }
-    if (paramss) {
-        [params setValuesForKeysWithDictionary:self.newparams];
-    }
     
     LYLog(@"请求url____%@",url);
     LYLog(@"请求参数____%@",params);
@@ -161,7 +175,7 @@
     if (self.startBlock) {
         self.startBlock(self);
     }
-    LYLog(@"________   %@",self.md5Identifier);
+    LYLog(@"________   %@",self.identifier);
     
     if (self.useCache) {
         id responseObject = [[LYRequestCacheManager sharedInstance] cacheRequestWithRequest:self];
@@ -197,15 +211,9 @@
         
     } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         if (responseObject) {
-            if (self) {
-                [self jsonParseWithData:responseObject];
-                [self parse];
-            }
+            [self jsonParseWithData:responseObject];
         } else {
-            if (self) {
-                self.error = error;
-                [self parse];
-            }
+            [self jsonParseWithData:error];
         }
     }];
     
@@ -238,11 +246,8 @@
         }
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [self jsonParseWithData:responseObject];
-        [self parse];
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        self.error = error;
-        [self parse];
+        [self jsonParseWithData:error];
     }];
 }
 
@@ -277,9 +282,10 @@
 }
 
 - (void)parse {
-    [[LYRequestHandle sharedInstance].lock lock];
-    NSArray *requests = [[LYRequestHandle sharedInstance] requestsWithMD5Identifier:self.md5Identifier].copy;
-    
+    NSArray *requests = [[LYRequestHandle sharedInstance] requestsWithIdentifier:self.identifier].copy;
+    if (requests == nil || requests.count == 0) {
+        requests = @[self];
+    }
     for (NSInteger index = 0;index < requests.count;index ++) {
         LYRequest *req = requests[index];
         if (req == self || req.task == self.task) {
@@ -294,7 +300,6 @@
         }
         
     }
-    [[LYRequestHandle sharedInstance].lock unlock];
 }
 
 
@@ -411,22 +416,29 @@
     return request;
 }
 
-- (NSString *)md5Identifier {
-    NSMutableDictionary *params1 = [NSMutableDictionary dictionary];
-    if (self.defaultParams) {
-        [params1 setValuesForKeysWithDictionary:self.defaultParams];
+- (NSString *)identifier {
+
+    if (_identifier == nil) {
+        NSDictionary *defaultParams = self.defaultParams ? : @{};
+        NSDictionary *params = self.params ? : @{};
+        NSDictionary *httpHeaders = self.httpHeaders ? : @{};
+        NSDictionary *IDParams1 = self.identifierParams ? : @{};
+        NSString *url = [self getUrlWithUrl:self.url] ? : @"";
+        
+        NSMutableDictionary *IDParams = @{@"url":url,@"defaultParams":defaultParams,@"params":params,@"httpHeaders":httpHeaders,@"IDParams":IDParams1}.mutableCopy;
+        
+        if (self.parseIDParamsBlock) {
+            IDParams = self.parseIDParamsBlock(IDParams);
+        }
+        
+        NSString *identifier = [NSString stringWithFormat:@"%@",[IDParams toString]];
+        LYLog(@"identifier^^^^^^^^^xly--%@",identifier);
+        NSString *myidentifier = [identifier md5String];
+        LYLog(@"identifier^^^^^^^^^xly--%@",myidentifier);
+        _identifier = myidentifier;
     }
-    if (self.params) {
-        [params1 setValuesForKeysWithDictionary:self.params];
-    }
-    if (self.newparams) {
-        [params1 setValuesForKeysWithDictionary:self.newparams];
-    }
-    NSDictionary *httpHeaders = self.httpHeaders ? : @{};
-    NSDictionary *md5Params = self.md5IdentifierParams ? : @{};
     
-    NSString *md5Identifier = [[NSString stringWithFormat:@"url:%@;params:%@;httpHeaders:%@;md5Params:%@",self.url,[params1 toString],[httpHeaders toString],[md5Params toString]] md5String];
-    return md5Identifier;
+    return _identifier;
 }
 
 @end
