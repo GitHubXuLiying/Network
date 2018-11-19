@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "LYNetworkingKit" 
-  s.version      = "1.0.6"        
+  s.version      = "1.0.7"        
   s.license      = "MIT"          
   s.summary      = "AFNetworking封装.增加取消指定的请求,避免重复请求，同时发起多个请求，缓存等功能" # 
 
