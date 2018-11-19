@@ -25,6 +25,16 @@
 @property (nonatomic, copy)   NSDictionary *httpHeaders;
 
 /**
+ * 最终的URL
+ */
+@property (nonatomic, copy, readonly) NSString *finalURL;
+/**
+ * 最终的参数，包含defaultParams
+ */
+@property (nonatomic, copy, readonly) NSDictionary *finalParams;
+
+
+/**
  * 唯一标志，用于缓存，去重，等等 可以自定义，如果没有指定自动根据请求url,params等自动生成
  */
 @property (nonatomic, copy)   NSString *identifier;
@@ -53,6 +63,7 @@
 
 
 @property (nonatomic, strong) id responseObject;
+@property (nonatomic, assign ,readonly) BOOL isCacheResponseObject;
 @property (nonatomic, strong) NSError *error;
 
 

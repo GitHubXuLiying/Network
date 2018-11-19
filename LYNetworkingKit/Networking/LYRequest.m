@@ -30,7 +30,7 @@
     if (self.task && self.isRunning) {
         [self.task cancel];
     }
-    LYLog(@"___requestDealloc____");
+    LYLog(@"___requestDealloc____url:%@",self.finalURL);
 }
 
 - (instancetype)initWithUrl:(NSString *)url requestMethod:(LYRequestMethod)method params:(NSDictionary *)params delegate:(id)delegate target:(id)target action:(SEL)action successBlock:(LYRequestSucBlock)successBlock failureBlock:(LYRequestFailBlock)failureBlock {
@@ -38,7 +38,7 @@
     if (self = [super init]) {
         [self initDefaultConfig];
         self.isUPloadImage = NO;
-        self.url = url;
+        self.url = [self getUrlWithUrl:url];;
         self.requestMethod = method;
         
         self.params = params;
@@ -87,7 +87,9 @@
 }
 
 - (void)jsonParseWithData:(id)data {
+    LYLog(@"\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\nurl:%@\nparams:%@\ndata:%@\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",self.finalURL,self.finalParams,data);
     [[LYRequestHandle sharedInstance].lock lock];
+    _isCacheResponseObject = NO;
     if ([data isKindOfClass:NSError.class]) {
         self.error = data;
         self.responseObject = nil;
@@ -105,6 +107,8 @@
         if (!image) {
             return nil;
         }
+        [self initDefaultConfig];
+
         self.isUPloadImage = YES;
         self.url = [self getUrlWithUrl:url];
         self.fileName = fileName;
@@ -116,6 +120,7 @@
         self.successBlock = successBlock;
         self.failureBlock = failureBlock;
         self.image = image;
+        [self initConfig];
     }
     return self;
 }
@@ -139,7 +144,7 @@
 
 - (void)resume {
     if (self.task == nil || self.finished == YES) {
-        [self resumeWithParams:nil];
+        [self performSelector:@selector(resumeWithParams:) withObject:nil afterDelay:0];
     } else {
         LYLog(@"xly--%@",@"正在请求。。。");
     }
@@ -149,14 +154,11 @@
     [[LYRequestHandle sharedInstance] cancelRequest:self];
 }
 
-- (void)resumeWithParams:(NSDictionary *)paramss {
-    
-    [self resetConfig];
-    
-    NSString *url = self.url;
-    if (self.baseURL) {
-        url = [self getUrlWithUrl:self.url];
-    }
+- (NSString *)finalURL {
+    return [self getUrlWithUrl:self.url];;
+}
+
+- (NSDictionary *)finalParams {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     if (self.defaultParams) {
         [params setValuesForKeysWithDictionary:self.defaultParams];
@@ -164,9 +166,13 @@
     if (self.params) {
         [params setValuesForKeysWithDictionary:self.params];
     }
+    return params;
+}
+
+- (void)resumeWithParams:(NSDictionary *)paramss {
     
-    LYLog(@"请求url____%@",url);
-    LYLog(@"请求参数____%@",params);
+    [self resetConfig];
+    LYLog(@"\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\nurl:%@\nparams:%@\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",self.finalURL,self.finalParams);
     AFHTTPSessionManager *manager = self.manager;
     if (self.isUPloadImage) { //上传图片
         [self resumeUPLoadImage];
@@ -175,8 +181,6 @@
     if (self.startBlock) {
         self.startBlock(self);
     }
-    LYLog(@"________   %@",self.identifier);
-    
     if (self.useCache) {
         id responseObject = [[LYRequestCacheManager sharedInstance] cacheRequestWithRequest:self];
         if (responseObject) {
@@ -188,7 +192,7 @@
     LYRequest *re = [[LYRequestHandle sharedInstance] existRequest:self];
     if (re) {
         if (!self.ignoreExistRequest) {
-            LYLog(@"已存在相同的网络请求");
+            LYLog(@"已存在相同的网络请求\nurl:%@\nparams:%@",self.finalURL,self.finalParams);
             [[LYRequestHandle sharedInstance] addReuest:self];
             self.task = re.task;
             return;
@@ -204,7 +208,7 @@
         method = @"POST";
     }
     
-    NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:method URLString:url parameters:params error:nil];
+    NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:method URLString:self.finalURL parameters:self.finalParams error:nil];
     self.task = [manager dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
         
     } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
@@ -226,7 +230,8 @@
         self.startBlock(self);
     }
     AFHTTPSessionManager *manager = self.manager;
-    self.task  =  [manager POST:self.url parameters:self.params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+
+    self.task  =  [manager POST:self.finalURL parameters:self.finalParams constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSData *imageData = UIImageJPEGRepresentation(self.image, 0.4);
         
         NSString *imageFileName = self.fileName;
@@ -256,7 +261,7 @@
 }
 
 - (BOOL)isCanceling {
-    return self.task && self.task.state == NSURLSessionTaskStateCanceling;
+    return self.task && (self.task.state == NSURLSessionTaskStateCanceling || self.error.code == NSURLErrorCancelled);
 }
 
 - (BOOL)isSuspended {
@@ -342,6 +347,7 @@
 }
 
 - (void)parseCacheRequest:(LYRequest *)req {
+    _isCacheResponseObject = YES;
     if (self.successBlock) {
         self.successBlock(req);
     }
@@ -432,9 +438,7 @@
         }
         
         NSString *identifier = [NSString stringWithFormat:@"%@",[IDParams toString]];
-        LYLog(@"identifier^^^^^^^^^xly--%@",identifier);
         NSString *myidentifier = [identifier md5String];
-        LYLog(@"identifier^^^^^^^^^xly--%@",myidentifier);
         _identifier = myidentifier;
     }
     
